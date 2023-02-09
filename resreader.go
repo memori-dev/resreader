@@ -74,7 +74,7 @@ type Decoder interface {
 	Decode(obj interface{}) error
 }
 
-func Decode[T Decoder](newDecoder func(io.Reader) T, res *http.Response, obj interface{}) (interface{}, error) {
+func Decode[D Decoder, O interface{}](newDecoder func(io.Reader) D, res *http.Response, obj *O) (*O, error) {
 	defer Close(res)
 
 	rdr, err := ReadCloserFor(res)
@@ -91,7 +91,7 @@ func Decode[T Decoder](newDecoder func(io.Reader) T, res *http.Response, obj int
 	return obj, nil
 }
 
-func Decode_[T Decoder](newDecoder func(io.Reader) T, res *http.Response, obj interface{}) error {
+func Decode_[D Decoder, O interface{}](newDecoder func(io.Reader) D, res *http.Response, obj *O) error {
 	_, err := Decode(newDecoder, res, obj)
 	return err
 }
